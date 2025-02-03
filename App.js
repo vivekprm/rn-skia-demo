@@ -1,10 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View, Text } from 'react-native';
+import CanvasCircle from './CanvasCircle';
+import { useState } from 'react';
+import { LoadSkiaWeb, WithSkiaWeb } from "@shopify/react-native-skia/lib/module/web";
 
 export default function App() {
+  const [isSkiaLoaded, setIsSkiaLoaded] = useState(false);
+  if (Platform.OS === 'web') {
+    LoadSkiaWeb({locatefile: () => '/canvaskit.wasm'})
+    .then(() => {
+      setIsSkiaLoaded(true);
+    });
+    if (isSkiaLoaded) {
+      return (
+      <WithSkiaWeb
+        getComponent={() => import("./CanvasCircle")}
+      />)
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text>Loading Skia...</Text>
+        </View>
+      )
+    }
+  }
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <CanvasCircle />
       <StatusBar style="auto" />
     </View>
   );
