@@ -13,9 +13,12 @@ export default function App() {
     });
     if (isSkiaLoaded) {
       return (
-      <WithSkiaWeb
-        getComponent={() => import("./CanvasCircle")}
-      />)
+        <WithSkiaWeb
+          getComponent={() =>
+            import("./SketchCanvasWithInteractionAndCustomization")
+          }
+        />
+      );
     } else {
       return (
         <View style={styles.container}>
@@ -26,7 +29,7 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-      <CanvasCircle />
+      <SketchCanvasWithInteractionAndCustomization />
       <StatusBar style="auto" />
     </View>
   );
