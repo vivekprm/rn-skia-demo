@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, View, Text } from 'react-native';
-import CanvasCircle from './CanvasCircle';
+import DrawingBoard from "./DrawingBoard";
 import { useState } from 'react';
 import { LoadSkiaWeb, WithSkiaWeb } from "@shopify/react-native-skia/lib/module/web";
 
@@ -12,10 +12,7 @@ export default function App() {
       setIsSkiaLoaded(true);
     });
     if (isSkiaLoaded) {
-      return (
-      <WithSkiaWeb
-        getComponent={() => import("./CanvasCircle")}
-      />)
+      return <WithSkiaWeb getComponent={() => import("./DrawingBoard")} />;
     } else {
       return (
         <View style={styles.container}>
@@ -26,7 +23,7 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-      <CanvasCircle />
+      <DrawingBoard />
       <StatusBar style="auto" />
     </View>
   );

@@ -55,3 +55,36 @@ export default function App() {
   );
 }
 ```
+
+There's one fun error that occurs after the setup. 
+
+The package at "node_modules\canvaskit-wasm\bin\full\canvaskit.js" attempted to import the Node standard library module "fs".
+It failed because the native React runtime does not include the Node standard library.
+
+https://docs.expo.dev/workflow/using-libraries/#using-third-party-libraries
+
+Self explanatory message, react native needs a workaround for standard node library like fs and path.
+
+React Native does not include Node.js's standard library. Usual solution would be to polyfill the standard library. But the real culprit here is the canvaskit-wasm module setup and not the lack of the standard Node library. Thanks to kimchouard, there's a workaround for this issue (just copying the piece here to see what's going on):
+
+
+```js
+// To be added in package.json "postinstall": "(...) && node path-fs-canvaskit-postinstall.js"
+const fs = require("fs");
+const path = require("path");
+
+const packageJsonPath = path.join(
+  __dirname,
+  "node_modules",
+  "canvaskit-wasm",
+  "package.json"
+);
+const packageJson = require(packageJsonPath);
+
+packageJson.browser = {
+  fs: false,
+  path: false,
+  os: false,
+};
+
+fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
