@@ -7,6 +7,9 @@ import { LoadSkiaWeb, WithSkiaWeb } from "@shopify/react-native-skia/lib/module/
 export default function App() {
   const [isSkiaLoaded, setIsSkiaLoaded] = useState(false);
   if (Platform.OS === 'web') {
+    global._WORKLET = false;
+    global._log = console.log;
+    global._getAnimationTimestamp = () => performance.now();
     LoadSkiaWeb({locatefile: () => '/canvaskit.wasm'})
     .then(() => {
       setIsSkiaLoaded(true);
